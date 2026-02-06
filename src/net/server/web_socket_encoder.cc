@@ -258,8 +258,6 @@ std::unique_ptr<WebSocketEncoder> WebSocketEncoder::CreateServer(
 // static
 std::unique_ptr<WebSocketEncoder> WebSocketEncoder::CreateClient(
     const std::string& response_extensions) {
-  // TODO(yhirano): Add a way to return an error.
-
   const std::vector<WebSocketExtension> extensions =
       ParseWebSocketExtensions(response_extensions);
   if (extensions.empty()) {
@@ -268,20 +266,20 @@ std::unique_ptr<WebSocketEncoder> WebSocketEncoder::CreateClient(
     // 2) There is a malformed Sec-WebSocketExtensions header.
     // We should return a deflate-disabled encoder for the former case and
     // fail the connection for the latter case.
+    if (response_extensions.find_first_not_of(" \t") != std::string::npos)
+      return nullptr;
     return base::WrapUnique(new WebSocketEncoder(FOR_CLIENT, nullptr, nullptr));
   }
   if (extensions.size() != 1) {
     // Only permessage-deflate extension is supported.
-    // TODO (yhirano): Fail the connection.
-    return base::WrapUnique(new WebSocketEncoder(FOR_CLIENT, nullptr, nullptr));
+    return nullptr;
   }
   const auto& extension = extensions[0];
   WebSocketDeflateParameters params;
   std::string failure_message;
   if (!params.Initialize(extension, &failure_message) ||
       !params.IsValidAsResponse(&failure_message)) {
-    // TODO (yhirano): Fail the connection.
-    return base::WrapUnique(new WebSocketEncoder(FOR_CLIENT, nullptr, nullptr));
+    return nullptr;
   }
 
   auto deflater = std::make_unique<WebSocketDeflater>(
@@ -290,8 +288,7 @@ std::unique_ptr<WebSocketEncoder> WebSocketEncoder::CreateClient(
                                                       kInflaterChunkSize);
   if (!deflater->Initialize(params.PermissiveClientMaxWindowBits()) ||
       !inflater->Initialize(params.PermissiveServerMaxWindowBits())) {
-    // TODO (yhirano): Fail the connection.
-    return base::WrapUnique(new WebSocketEncoder(FOR_CLIENT, nullptr, nullptr));
+    return nullptr;
   }
 
   return base::WrapUnique(new WebSocketEncoder(FOR_CLIENT, std::move(deflater),
