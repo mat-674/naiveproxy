@@ -140,19 +140,20 @@ def allocate_port_number():
     return port
 
 
+class PortDict(dict):
+    def __init__(self, port_map):
+        self._port_map = port_map
+
+    def __getitem__(self, key):
+        if key.startswith('PORT'):
+            if key not in self._port_map:
+                self._port_map[key] = str(allocate_port_number())
+            return self._port_map[key]
+        return key
+
+
 def test_naive_once(proxy, *args, **kwargs):
     port_map = {}
-
-    class PortDict(dict):
-        def __init__(self, port_map):
-            self._port_map = port_map
-
-        def __getitem__(self, key):
-            if key.startswith('PORT'):
-                if key not in self._port_map:
-                    self._port_map[key] = str(allocate_port_number())
-                return self._port_map[key]
-            return key
     port_dict = PortDict(port_map)
 
     proxy = proxy.format_map(port_dict)
