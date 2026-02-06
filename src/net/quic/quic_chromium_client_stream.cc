@@ -496,18 +496,14 @@ void QuicChromiumClientStream::Handle::SaveState() {
 void QuicChromiumClientStream::Handle::SetCallback(
     CompletionOnceCallback new_callback,
     CompletionOnceCallback* callback) {
-  // TODO(rch): Convert this to a DCHECK once we ensure the API is stable and
-  // bug free.
-  CHECK(!may_invoke_callbacks_);
+  DCHECK(!may_invoke_callbacks_);
   *callback = std::move(new_callback);
 }
 
 void QuicChromiumClientStream::Handle::ResetAndRun(
     CompletionOnceCallback callback,
     int rv) {
-  // TODO(rch): Convert this to a DCHECK once we ensure the API is stable and
-  // bug free.
-  CHECK(may_invoke_callbacks_);
+  DCHECK(may_invoke_callbacks_);
   std::move(callback).Run(rv);
 }
 
