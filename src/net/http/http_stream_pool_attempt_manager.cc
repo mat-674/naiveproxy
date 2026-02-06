@@ -1954,9 +1954,7 @@ void HttpStreamPool::AttemptManager::HandleQuicSessionReady(
   CHECK(availability_state_ == AvailabilityState::kAvailable);
   CHECK(!quic_attempt_);
   CHECK(quic_session);
-  // TODO(crbug.com/415488524): Change to DCHECK once we confirm the bug is
-  // fixed.
-  CHECK(CanUseExistingQuicSession());
+  DCHECK(CanUseExistingQuicSession());
 
   TRACE_EVENT_INSTANT("net.stream", "AttemptManager::QuicSessionReady", track_);
 
