@@ -272,9 +272,11 @@ class MainWindow(tk.Tk):
         self.start_btn.config(state="disabled")
 
     def check_queue(self):
+        count = 0
         try:
-            while True:
+            while count < 100:
                 msg_type, content = self.log_queue.get_nowait()
+                count += 1
                 if msg_type == "LOG":
                     self.log(content)
                 elif msg_type == "STATUS":
@@ -291,7 +293,10 @@ class MainWindow(tk.Tk):
         except queue.Empty:
             pass
 
-        self.after(100, self.check_queue)
+        if count >= 100:
+            self.after(10, self.check_queue)
+        else:
+            self.after(100, self.check_queue)
 
     def log(self, message):
         self.log_text.config(state="normal")
