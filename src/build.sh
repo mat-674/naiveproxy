@@ -108,7 +108,6 @@ if [ "$target_os" = "linux" -a "$target_cpu" = "x64" ]; then
 fi
 
 
-rm -rf "./$out"
 mkdir -p out
 
 export DEPOT_TOOLS_WIN_TOOLCHAIN=0
