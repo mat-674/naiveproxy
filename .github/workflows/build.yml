@@ -97,14 +97,16 @@ jobs:
       - name: Pack naiveproxy assets
         run: |
           mkdir ${{ env.BUNDLE }}
-          cp out/Release/naive config.json ../LICENSE ../USAGE.txt ${{ env.BUNDLE }}
+          cp out/Release/naive.exe config.json ../LICENSE ../USAGE.txt ${{ env.BUNDLE }}
           7z a ${{ env.BUNDLE }}.zip ${{ env.BUNDLE }}
           openssl sha256 out/Release/naive.exe >sha256sum.txt
           echo "SHA256SUM=$(cut -d' ' -f2 sha256sum.txt)" >>$GITHUB_ENV
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.BUNDLE }}.zip naive executable sha256 ${{ env.SHA256SUM }}
-          path: src/sha256sum.txt
+          path: |
+            src/sha256sum.txt
+            src/${{ env.BUNDLE }}.zip
       - name: Upload naiveproxy assets
         if: ${{ github.event_name == 'release' }}
         run: gh release upload "${GITHUB_REF##*/}"  ${{ env.BUNDLE }}.zip --clobber
