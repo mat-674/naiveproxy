@@ -52,7 +52,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [x64, x86, arm64]
+        arch: [x64]
     env:
       EXTRA_FLAGS: 'target_cpu="${{ matrix.arch }}"'
       BUNDLE: naiveproxy-${{ github.event.release.tag_name }}-${{ github.job }}-${{ matrix.arch }}
