@@ -94,14 +94,22 @@ jobs:
       - run: ../tests/basic.sh out/Release/naive
         # No real or emulated environment is available to test this.
         if: ${{ matrix.arch != 'arm64' }}
-      - name: Build GUI
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build Electron App
         run: |
-          pip install pyinstaller
-          pyinstaller --onefile --noconsole --name naive_gui ../gui/naive_gui.py
+          cd ../gui/electron
+          npm ci
+          npm run dist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Pack naiveproxy assets
         run: |
           mkdir ${{ env.BUNDLE }}
-          cp out/Release/naive.exe dist/naive_gui.exe config.json ../LICENSE ../USAGE.txt ${{ env.BUNDLE }}
+          cp out/Release/naive.exe config.json ../LICENSE ../USAGE.txt ${{ env.BUNDLE }}
+          cp ../gui/electron/release/*.exe ${{ env.BUNDLE }}/ || true
           7z a ${{ env.BUNDLE }}.zip ${{ env.BUNDLE }}
           openssl sha256 out/Release/naive.exe >sha256sum.txt
           echo "SHA256SUM=$(cut -d' ' -f2 sha256sum.txt)" >>$GITHUB_ENV
