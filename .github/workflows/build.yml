@@ -16,38 +16,38 @@ env:
   CCACHE_MAXFILES: 0
   SCCACHE_CACHE_SIZE: 200M
 jobs:
-  cache-toolchains-win:
-    runs-on: windows-2022
-    steps:
-      - uses: actions/checkout@v4
-      - name: Cache toolchains
-        uses: actions/cache@v4
-        with:
-          path: |
-            src/third_party/llvm-build/Release+Asserts/
-            src/gn/
-            ~/.cargo/bin/
-            ~/bin/ninja.exe
-          key: toolchains-win-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
-      - name: Cache PGO (win64)
-        uses: actions/cache@v4
-        with:
-          path: src/chrome/build/pgo_profiles/chrome-win64-*
-          key: pgo-win64-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
-      - name: Cache PGO (win32)
-        uses: actions/cache@v4
-        with:
-          path: src/chrome/build/pgo_profiles/chrome-win32-*
-          key: pgo-win32-arm64-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
-      - run: EXTRA_FLAGS='target_cpu="x64"' ./get-clang.sh
-      - run: EXTRA_FLAGS='target_cpu="x86"' ./get-clang.sh
-      - run: |
-          if [ ! -f ~/bin/ninja.exe ]; then
-            curl -LO https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip
-            unzip ninja-win.zip -d ~/bin
-          fi
+#  cache-toolchains-win:
+#    runs-on: windows-2022
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Cache toolchains
+#        uses: actions/cache@v4
+#        with:
+#          path: |
+#            src/third_party/llvm-build/Release+Asserts/
+#            src/gn/
+#            ~/.cargo/bin/
+#            ~/bin/ninja.exe
+#          key: toolchains-win-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
+#      - name: Cache PGO (win64)
+#        uses: actions/cache@v4
+#        with:
+#          path: src/chrome/build/pgo_profiles/chrome-win64-*
+#          key: pgo-win64-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
+#      - name: Cache PGO (win32)
+#        uses: actions/cache@v4
+#        with:
+#          path: src/chrome/build/pgo_profiles/chrome-win32-*
+#          key: pgo-win32-arm64-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
+#      - run: EXTRA_FLAGS='target_cpu="x64"' ./get-clang.sh
+#      - run: EXTRA_FLAGS='target_cpu="x86"' ./get-clang.sh
+#      - run: |
+#          if [ ! -f ~/bin/ninja.exe ]; then
+#            curl -LO https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip
+#            unzip ninja-win.zip -d ~/bin
+#          fi
   win:
-    needs: cache-toolchains-win
+#    needs: cache-toolchains-win
     runs-on: windows-2022
     strategy:
       fail-fast: false
@@ -58,39 +58,39 @@ jobs:
       BUNDLE: naiveproxy-${{ github.event.release.tag_name }}-${{ github.job }}-${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v4
-      - name: Cache toolchains
-        uses: actions/cache@v4
-        with:
-          path: |
-            src/third_party/llvm-build/Release+Asserts/
-            src/gn/
-            ~/.cargo/bin/
-            ~/bin/ninja.exe
-          key: toolchains-win-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
-      - name: Cache PGO (win64)
-        if: ${{ matrix.arch == 'x64' }}
-        uses: actions/cache@v4
-        with:
-          path: src/chrome/build/pgo_profiles/chrome-win64-*
-          key: pgo-win64-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
-      - name: Cache PGO (win32)
-        if: ${{ matrix.arch != 'x64' }}
-        uses: actions/cache@v4
-        with:
-          path: src/chrome/build/pgo_profiles/chrome-win32-*
-          key: pgo-win32-arm64-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
-      - id: ccache-timestamp
-        run: echo "CCACHE_TIMESTAMP=$(date +%s)" >>$GITHUB_OUTPUT
-      - name: Cache ccache files
-        uses: actions/cache@v4
-        with:
-          path: ~/AppData/Local/Mozilla/sccache
-          key: ccache-win-${{ matrix.arch }}-${{ hashFiles('CHROMIUM_VERSION') }}-${{ steps.ccache-timestamp.outputs.CCACHE_TIMESTAMP }}
-          restore-keys: ccache-win-${{ matrix.arch }}-${{ hashFiles('CHROMIUM_VERSION') }}-
-      - run: ./get-clang.sh
-      - run: ~/.cargo/bin/sccache -z
+#      - name: Cache toolchains
+#        uses: actions/cache@v4
+#        with:
+#          path: |
+#            src/third_party/llvm-build/Release+Asserts/
+#            src/gn/
+#            ~/.cargo/bin/
+#            ~/bin/ninja.exe
+#          key: toolchains-win-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
+#      - name: Cache PGO (win64)
+#        if: ${{ matrix.arch == 'x64' }}
+#        uses: actions/cache@v4
+#        with:
+#          path: src/chrome/build/pgo_profiles/chrome-win64-*
+#          key: pgo-win64-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
+#      - name: Cache PGO (win32)
+#        if: ${{ matrix.arch != 'x64' }}
+#        uses: actions/cache@v4
+#        with:
+#          path: src/chrome/build/pgo_profiles/chrome-win32-*
+#          key: pgo-win32-arm64-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
+#      - id: ccache-timestamp
+#        run: echo "CCACHE_TIMESTAMP=$(date +%s)" >>$GITHUB_OUTPUT
+#      - name: Cache ccache files
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/AppData/Local/Mozilla/sccache
+#          key: ccache-win-${{ matrix.arch }}-${{ hashFiles('CHROMIUM_VERSION') }}-${{ steps.ccache-timestamp.outputs.CCACHE_TIMESTAMP }}
+#          restore-keys: ccache-win-${{ matrix.arch }}-${{ hashFiles('CHROMIUM_VERSION') }}-
+#      - run: ./get-clang.sh
+#      - run: ~/.cargo/bin/sccache -z
       - run: ./build.sh
-      - run: ~/.cargo/bin/sccache -s
+#      - run: ~/.cargo/bin/sccache -s
       - run: ../tests/basic.sh out/Release/naive
         # No real or emulated environment is available to test this.
         if: ${{ matrix.arch != 'arm64' }}

@@ -23,6 +23,14 @@ fi
 
 . ./get-sysroot.sh
 
+# Try downloading first
+if [ "$SKIP_DOWNLOAD" != "1" ]; then
+  if ./download-bin.sh; then
+    echo "Skipping build as binary was downloaded."
+    exit 0
+  fi
+fi
+
 # ccache
 case "$host_os" in
   linux|mac)
