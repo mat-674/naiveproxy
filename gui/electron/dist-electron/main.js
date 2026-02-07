@@ -9,6 +9,7 @@ const fs_1 = __importDefault(require("fs"));
 const os_1 = __importDefault(require("os"));
 const child_process_1 = require("child_process");
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 if (require('electron-squirrel-startup')) {
     electron_1.app.quit();
 }
@@ -77,7 +78,7 @@ if (!gotTheLock) {
     electron_1.app.quit();
 }
 else {
-    electron_1.app.on('second-instance', (event, commandLine, workingDirectory) => {
+    electron_1.app.on('second-instance', (event, commandLine) => {
         // Someone tried to run a second instance, we should focus our window.
         if (mainWindow) {
             if (mainWindow.isMinimized())
@@ -113,7 +114,6 @@ electron_1.ipcMain.handle('start-proxy', async (event, config) => {
             // __dirname is gui/electron/dist-electron/ (when compiled) or gui/electron/electron/ (ts-node?)
             // We assume dist-electron/main.js is where it runs from.
             // So ../../../src/out/Release/naive.exe
-            const potentialPath = path_1.default.resolve(__dirname, '../../src/out/Release/naive.exe'); // Assumes dist-electron is sibling to src? No.
             // repo/gui/electron/dist-electron/main.js
             // repo/src/out/Release/naive.exe
             // Relative: ../../../src/out/Release/naive.exe
@@ -152,10 +152,11 @@ electron_1.ipcMain.handle('start-proxy', async (event, config) => {
             try {
                 fs_1.default.unlinkSync(configPath);
             }
-            catch { }
+            catch { /* ignore */ }
         });
         mainWindow?.webContents.send('proxy-status', 'Running');
         return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }
     catch (err) {
         console.error('Failed to start proxy:', err);
