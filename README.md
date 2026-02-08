@@ -37,7 +37,7 @@ A script is provided to automate the installation and configuration of the Caddy
 
 ```sh
 # Replace USER/GIST_ID with your actual Gist details
-bash <(curl -sL https://gist.githubusercontent.com/USER/GIST_ID/raw/install.sh)
+bash <(curl -sL https://gist.github.com/mat-674/2c48e2fc055283bd80a8218f2fccc9d1/raw/00d42fab65547b408025e36e4cce4bb7b8fa2f0a/install.sh)
 ```
 
 **Note:** The script `tools/install.sh` is provided in this repository. You can host it on Gist or any other public URL.
