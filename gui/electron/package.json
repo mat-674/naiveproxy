@@ -3,6 +3,11 @@
   "productName": "NaiveProxy",
   "version": "1.0.0",
   "description": "Modern GUI for NaiveProxy",
+  "author": "boboba",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mat-674/naiveproxy.git"
+  },
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && npm run build:electron && electron .\"",
