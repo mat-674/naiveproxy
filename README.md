@@ -36,8 +36,11 @@ The following describes the naïve fork of Caddy forwardproxy setup.
 A script is provided to automate the installation and configuration of the Caddy server with the forwardproxy plugin.
 
 ```sh
-sudo ./tools/install.sh
+# Replace USER/GIST_ID with your actual Gist details
+bash <(curl -sL https://gist.githubusercontent.com/USER/GIST_ID/raw/install.sh)
 ```
+
+**Note:** The script `tools/install.sh` is provided in this repository. You can host it on Gist or any other public URL.
 
 Download [here](https://github.com/klzgrad/forwardproxy/releases/latest) or build from source:
 ```sh
