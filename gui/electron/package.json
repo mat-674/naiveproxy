@@ -11,7 +11,7 @@
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && npm run build:electron && electron .\"",
-    "build:electron": "tsc -p electron/tsconfig.json && echo '{\"type\":\"commonjs\"}' > dist-electron/package.json",
+    "build:electron": "tsc -p electron/tsconfig.json && node create-commonjs-package.cjs",
     "build": "tsc -b && vite build && npm run build:electron",
     "dist": "npm run build && electron-builder",
     "lint": "eslint ."
