@@ -31,6 +31,14 @@ Build from source: Please see [.github/workflows/build.yml](https://github.com/k
 
 The following describes the naïve fork of Caddy forwardproxy setup.
 
+### Quick Install Script (Linux)
+
+A script is provided to automate the installation and configuration of the Caddy server with the forwardproxy plugin.
+
+```sh
+sudo ./tools/install.sh
+```
+
 Download [here](https://github.com/klzgrad/forwardproxy/releases/latest) or build from source:
 ```sh
 go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
